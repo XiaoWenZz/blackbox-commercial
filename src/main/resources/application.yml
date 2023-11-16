@@ -40,8 +40,8 @@ mini-app:
   #app-id:
   #app-secret:
   #正式
-  app-id:wx67702520b42d8017
-  app-secret:52f1c76ab378e73f1f35fdda24f2bf7d
+  app-id: wx67702520b42d8017
+  app-secret: 52f1c76ab378e73f1f35fdda24f2bf7d
 
 logback:
   dir: logs
