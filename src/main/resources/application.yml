@@ -13,5 +13,55 @@ spring:
       suffix: .html
       prefix: /
 
-mybatis:
-  mapper-locations: classpath*:mapper/*Mapper.xml
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  main:
+    allow-bean-definition-overriding: true
+
+  redis:
+    database: 1
+    #    database : 1
+    host: uueksvzm.redis.c5xl91uo.b2jes7y3.com
+    #    host : https://redis-52040-6-1318242663.sh.run.tcloudbase.com
+    port: 6379
+    timeout: 1000
+
+mybatis-plus:
+  global-config:
+    db-config:
+      #字段策略，默认非NULL判断
+      field-strategy: not_null
+  configuration:
+    map-underscore-to-camel-case: true
+
+mini-app:
+  #开发
+  #app-id:
+  #app-secret:
+  #正式
+  app-id:wx67702520b42d8017
+  app-secret:52f1c76ab378e73f1f35fdda24f2bf7d
+
+logback:
+  dir: logs
+  #文件名称
+  filename:
+    all: springboot-base-frame-all
+    info: springboot-base-frame-info
+    warn: springboot-base-frame-warn
+    error: springboot-base-frame-error
+  #文件的最大数量
+  maxhistory: 10
+  #文件的最大文件大小
+  maxfilesize: 100MB
+  #日志级别
+  level: debug
+  #日志字符编码
+  charset: UTF-8
+  #日志格式
+  CONSOLE_LOG_PATTERN: '%d{yyyy-MM-dd HH:mm:ss.SSS} %boldYellow([%thread]) %highlight(%-5level) %boldGreen(%logger{50}) - %msg%n'
+  FILE_LOG_PATTERN: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n'
+
+swagger:
+  enable: true
