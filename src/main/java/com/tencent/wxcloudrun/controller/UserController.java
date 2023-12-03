@@ -54,7 +54,7 @@ public class UserController {
     @ApiOperation(value = "获取个人信息")
     public Result getUserSessionData(){
         try{
-            return Result.success(userService.getUserByOpenId(sessionUtils.getOpenId()));
+            return Result.success(userService.getUserByUnionId(sessionUtils.getUnionId()));
         }catch (CommonException e){
             return Result.result(e.getCommonErrorCode());
         }
@@ -65,7 +65,7 @@ public class UserController {
     @ApiOperation(value = "获取个人信息")
     public Result getUserSessionDataTest(){
         try{
-            return Result.success(userService.getSessionDataFromRedis(sessionUtils.getOpenId()));
+            return Result.success(userService.getSessionDataFromRedis(sessionUtils.getUnionId()));
         }catch (CommonException e){
             return Result.result(e.getCommonErrorCode());
         }

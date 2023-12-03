@@ -80,8 +80,8 @@ public class SessionUtils {
         response.setHeader(CommonConstants.SESSION,sessionId);
     }
 
-    public void setOpenId(String openId){
-        response.setHeader(CommonConstants.OPEN_ID,openId);
+    public void setUnionId(String unionId){
+        response.setHeader(CommonConstants.UNION_ID, unionId);
     }
 
     public String generateSessionId(){

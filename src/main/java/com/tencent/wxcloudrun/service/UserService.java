@@ -25,7 +25,7 @@ public interface UserService {
 
     void BindMerchant(String openId, String code);
 
-    User getUserByOpenId(String openId);
+    User getUserByUnionId(String unionId);
 
     SessionData getSessionDataFromRedis(String openId);
 

@@ -76,9 +76,14 @@ public class User {
     @ApiModelProperty("是否完成注册抽奖 0未完成 1已完成")
     private Integer isUpdate;
 
+    @ApiModelProperty("商家版openId")
+    private String businessOpenId;
 
 
-    public User(String sessionId, String openId, String unionId, String sessionKey, String createTime, String nickname, Integer type, Integer userType, String province, String city, String region, String wechatId, String chipId) {
+
+    public User(String sessionId, String openId, String unionId, String sessionKey, String createTime,String nickname,
+                Integer type, Integer userType, String province, String city,
+                String region, String wechatId, String chipId, Integer isUpdate, String businessOpenId) {
         this.sessionId = sessionId;
         this.openId = openId;
         this.unionId = unionId;
@@ -92,6 +97,8 @@ public class User {
         this.region = region;
         this.wechatId = wechatId;
         this.chipId = chipId;
+        this.isUpdate = isUpdate;
+        this.businessOpenId = businessOpenId;
     }
 
 }

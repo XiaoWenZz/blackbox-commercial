@@ -15,8 +15,8 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT * FROM user")
     List<BriefUser> getBriefUserList();
 
-    @Select("SELECT * FROM user WHERE open_id=#{openId}")
-    User getUserByOpenId(@Param("openId")String openId);
+    @Select("SELECT * FROM user WHERE union_id=#{unionId}")
+    User getUserByUnionId(@Param("unionId")String unionId);
 
     @Select("SELECT * FROM user WHERE chip_id=#{chipId}")
     User getUserByChipId(@Param("chipId")String chipId);

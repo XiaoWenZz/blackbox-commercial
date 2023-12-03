@@ -55,17 +55,17 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    public User getUserByOpenId(String openId) throws CommonException {
+    public User getUserByUnionId(String unionId) throws CommonException {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("open_id", openId);
+        queryWrapper.eq("union_id", unionId);
         User user = userMapper.selectOne(queryWrapper);
 
         if (user == null) throw new CommonException(CommonErrorCode.USER_NOT_EXIST);
         return user;
     }
 
-    public SessionData getSessionDataFromRedis(String openId) throws CommonException {
-        return (SessionData) redisUtil.get(openId);
+    public SessionData getSessionDataFromRedis(String unionId) throws CommonException {
+        return (SessionData) redisUtil.get(unionId);
     }
 
 
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = CommonException.class)
     @Override
     public void updateUser(String openId, UpdateUserRequest updateUserRequest) {
-        User user = userMapper.getUserByOpenId(openId);
+        User user = userMapper.getUserByUnionId(openId);
 
         if (updateUserRequest.getNickname() != null) user.setNickname(updateUserRequest.getNickname());
         if (updateUserRequest.getTelephone() != null) user.setTelephone(updateUserRequest.getTelephone());
@@ -135,19 +135,23 @@ public class UserServiceImpl implements UserService {
 //
 //        checkWxSession(wxSession);
 
-        String openId = sessionUtils.getOpenId();
+        String bussinessOpenId = sessionUtils.getOpenId();
         String unionId = sessionUtils.getUnionId();
 
-        User user = userMapper.getUserByOpenId(openId);
+        User user = userMapper.getUserByUnionId(unionId);
 
         if (user != null) {
-            sessionUtils.setOpenId(user.getOpenId());
+            if (user.getBusinessOpenId() == null) {
+                user.setBusinessOpenId(bussinessOpenId);
+                userMapper.updateById(user);
+            }
+            sessionUtils.setUnionId(user.getOpenId());
             return new SessionData(user);
         }
 
         User user1 = User.builder()
-                .openId(openId)
                 .unionId(unionId)
+                .businessOpenId(bussinessOpenId)
                 .createTime(TimeUtil.getCurrentTimestamp())
                 .nickname("黑匣看展用户")
                 .isUpdate(0)
@@ -194,7 +198,7 @@ public class UserServiceImpl implements UserService {
         Merchant merchant = merchantMapper.selectById(merchantMapper.getMerchantByKey(key));
         if (merchant == null) throw new CommonException(CommonErrorCode.MERCHANT_NOT_EXIST);
 
-        User user = userMapper.getUserByOpenId(openId);
+        User user = userMapper.getUserByUnionId(openId);
         user.setPublisherId(merchant.getId());
         user.setPublisherName(merchant.getName());
 
