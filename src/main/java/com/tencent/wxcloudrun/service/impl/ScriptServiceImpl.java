@@ -16,12 +16,10 @@ import com.tencent.wxcloudrun.dto.request.AddScriptRequest;
 import com.tencent.wxcloudrun.dto.request.GetScriptScheduleListRequest;
 import com.tencent.wxcloudrun.dto.request.ScriptFilterRequest;
 import com.tencent.wxcloudrun.dto.request.UpdateScriptRequest;
+import com.tencent.wxcloudrun.entity.Merchant;
 import com.tencent.wxcloudrun.entity.Script;
 import com.tencent.wxcloudrun.entity.User;
-import com.tencent.wxcloudrun.mapper.JoinMapper;
-import com.tencent.wxcloudrun.mapper.ScriptCollectionMapper;
-import com.tencent.wxcloudrun.mapper.ScriptMapper;
-import com.tencent.wxcloudrun.mapper.UserMapper;
+import com.tencent.wxcloudrun.mapper.*;
 import com.tencent.wxcloudrun.service.ScriptService;
 import com.tencent.wxcloudrun.util.SessionUtils;
 import okhttp3.*;
@@ -55,6 +53,9 @@ public class ScriptServiceImpl implements ScriptService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private MerchantMapper merchantMapper;
+
     @Override
     public String uploadScriptPicture(MultipartFile file, Long scriptId) {
         return null;
@@ -62,10 +63,15 @@ public class ScriptServiceImpl implements ScriptService {
 
     @Override
     public Long addScript(AddScriptRequest addScriptRequest) {
+
+        Merchant merchant = merchantMapper.selectById(addScriptRequest.getMerchant1Id());
+        if (merchant == null) throw new CommonException(CommonErrorCode.MERCHANT_NOT_EXIST);
+
         Script script = Script.builder()
                 .name(addScriptRequest.getName())
                 .author1Name(addScriptRequest.getAuthor1Name())
-                .merchant1Name(addScriptRequest.getMerchant1Name())
+                .merchant1Id(addScriptRequest.getMerchant1Id())
+                .merchant1Name(merchant.getName())
                 .introduction(addScriptRequest.getIntroduction())
                 .type(addScriptRequest.getType())
                 .saleForm(addScriptRequest.getSaleForm())
@@ -76,17 +82,37 @@ public class ScriptServiceImpl implements ScriptService {
                 .heat(0)
                 .build();
 
+        if (addScriptRequest.getMerchant2Id() != null) {
+            Merchant merchant2 = merchantMapper.selectById(addScriptRequest.getMerchant2Id());
+            if (merchant2 == null) throw new CommonException(CommonErrorCode.MERCHANT_NOT_EXIST);
+            script.setMerchant2Id(merchant2.getId());
+            script.setMerchant2Name(merchant2.getName());
+        }
+
+        if (addScriptRequest.getMerchant3Id() != null) {
+            Merchant merchant3 = merchantMapper.selectById(addScriptRequest.getMerchant3Id());
+            if (merchant3 == null) throw new CommonException(CommonErrorCode.MERCHANT_NOT_EXIST);
+            script.setMerchant3Id(merchant3.getId());
+            script.setMerchant3Name(merchant3.getName());
+        }
+
+
+
         if (addScriptRequest.getAuthor2Name() != null) script.setAuthor2Name(addScriptRequest.getAuthor2Name());
         if (addScriptRequest.getAuthor3Name() != null) script.setAuthor3Name(addScriptRequest.getAuthor3Name());
-        if (addScriptRequest.getMerchant2Name() != null) script.setMerchant2Name(addScriptRequest.getMerchant2Name());
-        if (addScriptRequest.getMerchant3Name() != null) script.setMerchant3Name(addScriptRequest.getMerchant3Name());
-        if (addScriptRequest.getComposition() != null) script.setComposition(addScriptRequest.getComposition());
+        if (addScriptRequest.getPlayerCount() != null) script.setPlayerCount(addScriptRequest.getPlayerCount());
+        if (addScriptRequest.getMaleCount() != null) script.setMaleCount(addScriptRequest.getMaleCount());
+        if (addScriptRequest.getFemaleCount() != null) script.setFemaleCount(addScriptRequest.getFemaleCount());
         if (addScriptRequest.getNeeds() != null) script.setNeeds(addScriptRequest.getNeeds());
         if (addScriptRequest.getAfterSaleSupport() != null) script.setAfterSaleSupport(addScriptRequest.getAfterSaleSupport());
         if (addScriptRequest.getPrice() != null) script.setPrice(addScriptRequest.getPrice());
-        if (addScriptRequest.getPlayTime() != null) script.setPlayTime(addScriptRequest.getPlayTime());
+        if (addScriptRequest.getMinPlayTime() != null) script.setMinPlayTime(addScriptRequest.getMinPlayTime());
+        if (addScriptRequest.getMaxPlayTime() != null) script.setMaxPlayTime(addScriptRequest.getMaxPlayTime());
         if (addScriptRequest.getIceBreaking() != null) script.setIceBreaking(addScriptRequest.getIceBreaking());
         if (addScriptRequest.getDeliveryTime() != null) script.setDeliveryTime(addScriptRequest.getDeliveryTime());
+        if (addScriptRequest.getCrossDressing() != null) script.setCrossDressing(addScriptRequest.getCrossDressing());
+        if (addScriptRequest.getSingleReadVolume() != null) script.setSingleReadVolume(addScriptRequest.getSingleReadVolume());
+        if (addScriptRequest.getHighlight() != null) script.setHighlight(addScriptRequest.getHighlight());
 
         scriptMapper.insert(script);
         return script.getId();
@@ -241,11 +267,28 @@ public class ScriptServiceImpl implements ScriptService {
         if (request.getAuthor1Name() != null) script.setAuthor1Name(request.getAuthor1Name());
         if (request.getAuthor2Name() != null) script.setAuthor2Name(request.getAuthor2Name());
         if (request.getAuthor3Name() != null) script.setAuthor3Name(request.getAuthor3Name());
-        if (request.getMerchant1Name() != null) script.setMerchant1Name(request.getMerchant1Name());
-        if (request.getMerchant2Name() != null) script.setMerchant2Name(request.getMerchant2Name());
-        if (request.getMerchant3Name() != null) script.setMerchant3Name(request.getMerchant3Name());
+        if (request.getMerchant1Id() != null) {
+            Merchant merchant = merchantMapper.selectById(request.getMerchant1Id());
+            if (merchant == null) throw new CommonException(CommonErrorCode.MERCHANT_NOT_EXIST);
+            script.setMerchant1Id(request.getMerchant1Id());
+            script.setMerchant1Name(merchant.getName());
+        }
+        if (request.getMerchant2Id() != null) {
+            Merchant merchant = merchantMapper.selectById(request.getMerchant2Id());
+            if (merchant == null) throw new CommonException(CommonErrorCode.MERCHANT_NOT_EXIST);
+            script.setMerchant2Id(request.getMerchant2Id());
+            script.setMerchant2Name(merchant.getName());
+        }
+        if (request.getMerchant3Id() != null) {
+            Merchant merchant = merchantMapper.selectById(request.getMerchant3Id());
+            if (merchant == null) throw new CommonException(CommonErrorCode.MERCHANT_NOT_EXIST);
+            script.setMerchant3Id(request.getMerchant3Id());
+            script.setMerchant3Name(merchant.getName());
+        }
         if (request.getIntroduction() != null) script.setIntroduction(request.getIntroduction());
-        if (request.getComposition() != null) script.setComposition(request.getComposition());
+        if (request.getPlayerCount() != null) script.setPlayerCount(request.getPlayerCount());
+        if (request.getMaleCount() != null) script.setMaleCount(request.getMaleCount());
+        if (request.getFemaleCount() != null) script.setFemaleCount(request.getFemaleCount());
         if (request.getType() != null) script.setType(request.getType());
         if (request.getSaleForm() != null) script.setSaleForm(request.getSaleForm());
         if (request.getTag() != null) script.setTag(request.getTag());
@@ -256,9 +299,13 @@ public class ScriptServiceImpl implements ScriptService {
         if (request.getNeeds() != null) script.setNeeds(request.getNeeds());
         if (request.getAfterSaleSupport() != null) script.setAfterSaleSupport(request.getAfterSaleSupport());
         if (request.getPrice() != null) script.setPrice(request.getPrice());
-        if (request.getPlayTime() != null) script.setPlayTime(request.getPlayTime());
+        if (request.getMinPlayTime() != null) script.setMinPlayTime(request.getMinPlayTime());
+        if (request.getMaxPlayTime() != null) script.setMaxPlayTime(request.getMaxPlayTime());
         if (request.getIceBreaking() != null) script.setIceBreaking(request.getIceBreaking());
         if (request.getDeliveryTime() != null) script.setDeliveryTime(request.getDeliveryTime());
+        if (request.getCrossDressing() != null) script.setCrossDressing(request.getCrossDressing());
+        if (request.getSingleReadVolume() != null) script.setSingleReadVolume(request.getSingleReadVolume());
+        if (request.getHighlight() != null) script.setHighlight(request.getHighlight());
 
         scriptMapper.updateById(script);
 

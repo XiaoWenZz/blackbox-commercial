@@ -24,7 +24,7 @@ public class AddScriptRequest {
     private Integer saleForm;
 
     @NotNull
-    @ApiModelProperty("剧本类型 0情感 1推理 2机制 3欢乐 4其他")
+    @ApiModelProperty("剧本类型 0情感 1推理 2机制 3欢乐 4恐怖 5其他")
     private Integer type;
 
     @NotNull
@@ -32,7 +32,7 @@ public class AddScriptRequest {
     private Integer theme;
 
     @NotNull
-    @ApiModelProperty("派系 0本格 1变格 2新本格 3还原 4封闭 5半封闭 6开发")
+    @ApiModelProperty("派系 0本格 1变格 2新本格 3还原 4封闭 5半封闭 6开放 7立意 8其他")
     private Integer faction;
 
     @NotNull
@@ -53,21 +53,27 @@ public class AddScriptRequest {
     private String author3Name;
 
     @NotNull
-    @ApiModelProperty("剧本出品商1名称")
-    private String merchant1Name;
+    @ApiModelProperty("剧本出品商1 id")
+    private Long merchant1Id;
 
-    @ApiModelProperty("剧本出品商2名称")
-    private String merchant2Name;
+    @ApiModelProperty("剧本出品商2 id")
+    private Long merchant2Id;
 
-    @ApiModelProperty("剧本出品商3名称")
-    private String merchant3Name;
+    @ApiModelProperty("剧本出品商3 id")
+    private Long merchant3Id;
 
     @NotNull
     @ApiModelProperty("剧本简介")
     private String introduction;
 
-    @ApiModelProperty("男女组成")
-    private String composition;
+    @ApiModelProperty("人数")
+    private Integer playerCount;
+
+    @ApiModelProperty("男生人数")
+    private Integer maleCount;
+
+    @ApiModelProperty("女生人数")
+    private Integer femaleCount;
 
     @ApiModelProperty("需要配置")
     private String needs;
@@ -78,8 +84,20 @@ public class AddScriptRequest {
     @ApiModelProperty("售卖价格")
     private Integer price;
 
-    @ApiModelProperty("游玩时长")
-    private String playTime;
+    @ApiModelProperty("最短游玩时长")
+    private Double minPlayTime;
+
+    @ApiModelProperty("最长游玩时长")
+    private Double maxPlayTime;
+
+    @ApiModelProperty("能否反串 1否 2是")
+    private Integer crossDressing;
+
+    @ApiModelProperty("单人阅读体量 数字")
+    private Double singleReadVolume;
+
+    @ApiModelProperty("一句话剧本亮点")
+    private String highlight;
 
     @ApiModelProperty("是否有破冰 1否 2是")
     private Integer IceBreaking;
